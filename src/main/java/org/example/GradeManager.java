@@ -6,14 +6,17 @@ import java.util.ArrayList;
 
 public class GradeManager {
 
+
     public void saveGrade(Grade grade) throws SQLException {
 
-        String sql = "INSERT INTO grade_records "
-                + "(semester, subject_name, credits, marks, grade, grade_point) "
-                + "VALUES (?, ?, ?, ?, ?, ?) "
-                + "ON DUPLICATE KEY UPDATE credits = VALUES(credits), "
-                + "marks = VALUES(marks), grade = VALUES(grade), "
-                + "grade_point = VALUES(grade_point)";
+        String sql = "INSERT INTO grade_records " +
+                "(semester, subject_name, credits, marks, grade, grade_point) " +
+                "VALUES (?, ?, ?, ?, ?, ?) " +
+                "ON CONFLICT(semester, subject_name) DO UPDATE SET " +
+                "credits = excluded.credits, " +
+                "marks = excluded.marks, " +
+                "grade = excluded.grade, " +
+                "grade_point = excluded.grade_point";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -28,6 +31,7 @@ public class GradeManager {
             ps.executeUpdate();
         }
     }
+
 
     public ArrayList<Grade> getGrades(int semester) throws SQLException {
 

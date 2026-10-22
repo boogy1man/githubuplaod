@@ -38,6 +38,17 @@ public class Main extends JFrame {
 
     public static void main(String[] args) {
 
+        try {
+            DataBase.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Database error: " + e.getMessage()
+            );
+            return;
+        }
+
         SwingUtilities.invokeLater(() -> {
             new Main().setVisible(true);
         });
